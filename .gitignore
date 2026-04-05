@@ -1,0 +1,23 @@
+# Build artifacts
+*.dll
+*.obj
+*.o
+*.exe
+*.log
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Windhawk local files
+compiler_errors.log
+compiler_output.log
+compile_flags.txt
