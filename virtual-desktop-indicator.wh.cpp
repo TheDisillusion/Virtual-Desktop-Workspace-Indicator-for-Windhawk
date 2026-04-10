@@ -105,6 +105,9 @@ animation speeds are configurable.
 - allMonitors: false
   $name: Show on All Monitors
   $description: "When enabled, indicator and vignette appear on every monitor. Otherwise primary only."
+- pollIntervalMs: 200
+  $name: Poll Interval (ms)
+  $description: How often to check for desktop changes. Lower values = faster response but more CPU. Minimum 10.
 */
 // ==/WindhawkModSettings==
 
@@ -231,6 +234,7 @@ struct Settings {
     int vignetteAnimSpeed = 400;
 
     bool allMonitors = false;
+    int pollIntervalMs = 200;
 };
 
 // ============================================================================
@@ -899,6 +903,8 @@ static void LoadSettings() {
     g_settings.vignetteAnimSpeed= Wh_GetIntSetting(L"vignetteAnimationSpeed");
 
     g_settings.allMonitors = Wh_GetIntSetting(L"allMonitors");
+    g_settings.pollIntervalMs = Wh_GetIntSetting(L"pollIntervalMs");
+    if (g_settings.pollIntervalMs < 10) g_settings.pollIntervalMs = 10;
 }
 
 // ============================================================================
@@ -933,7 +939,7 @@ static DWORD WINAPI WorkerThreadProc(LPVOID) {
     CreateOverlayWindows();
 
     if (g_msgWindow) {
-        SetTimer(g_msgWindow, TIMER_POLL, 20, nullptr);
+        SetTimer(g_msgWindow, TIMER_POLL, g_settings.pollIntervalMs, nullptr);
         Wh_Log(L"Poll timer started on worker thread");
     } else {
         Wh_Log(L"ERROR: Failed to create message window");
